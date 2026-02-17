@@ -36,6 +36,28 @@
     var emailCheckTimer = null;
     var isSubmitting = false;
 
+    // ─── Scroll Threshold ────────────────────────────────────────────────────
+
+    var scrollThreshold = config.scrollThreshold || 0;
+    if (scrollThreshold > 0) {
+        container.classList.add('vb-scroll-hidden');
+
+        function checkScroll() {
+            var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            if (docHeight <= 0) return;
+            var scrolled = (scrollTop / docHeight) * 100;
+            if (scrolled >= scrollThreshold) {
+                container.classList.remove('vb-scroll-hidden');
+                container.classList.add('vb-scroll-visible');
+                window.removeEventListener('scroll', checkScroll);
+            }
+        }
+
+        window.addEventListener('scroll', checkScroll, { passive: true });
+        checkScroll();
+    }
+
     // ─── Bubble Click → Open Panel ──────────────────────────────────────────
 
     bubble.addEventListener('click', function () {

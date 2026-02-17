@@ -75,6 +75,7 @@ function vb_register_settings() {
     register_setting( 'vb_settings', 'vb_success_message', 'sanitize_text_field' );
     register_setting( 'vb_settings', 'vb_hide_on_mobile', 'absint' );
     register_setting( 'vb_settings', 'vb_always_show_x', 'absint' );
+    register_setting( 'vb_settings', 'vb_scroll_threshold', 'absint' );
 
     // Videos (stored as JSON array)
     register_setting( 'vb_settings', 'vb_video_rules', array(
@@ -181,6 +182,7 @@ function vb_settings_page() {
     $success_message   = get_option( 'vb_success_message', "Thanks for reaching out. I'll get back to you within 24h." );
     $hide_on_mobile    = get_option( 'vb_hide_on_mobile', 0 );
     $always_show_x     = get_option( 'vb_always_show_x', 0 );
+    $scroll_threshold  = get_option( 'vb_scroll_threshold', 0 );
     $email_validation  = get_option( 'vb_email_validation', 0 );
     $reoon_mode        = get_option( 'vb_reoon_mode', 'quick' );
     $email_accepted    = get_option( 'vb_email_accepted', array( 'valid', 'safe', 'unknown' ) );
@@ -305,6 +307,14 @@ function vb_settings_page() {
                             <input type="text" id="vb_success_message" name="vb_success_message"
                                    value="<?php echo esc_attr( $success_message ); ?>" class="regular-text" />
                             <p class="description">Shown after the form is submitted successfully.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><label for="vb_scroll_threshold">Show After Scroll (%)</label></th>
+                        <td>
+                            <input type="number" id="vb_scroll_threshold" name="vb_scroll_threshold"
+                                   value="<?php echo esc_attr( $scroll_threshold ); ?>" min="0" max="100" step="1" />
+                            <p class="description">Show the bubble only after the visitor scrolls this percentage of the page. 0 = show immediately.</p>
                         </td>
                     </tr>
                     <tr>
@@ -546,7 +556,8 @@ function vb_render_bubble() {
             webhookUrl: <?php echo wp_json_encode( $webhook_url ); ?>,
             ajaxUrl: <?php echo wp_json_encode( admin_url( 'admin-ajax.php' ) ); ?>,
             nonce: <?php echo wp_json_encode( wp_create_nonce( 'vb_nonce' ) ); ?>,
-            emailValidation: <?php echo (int) get_option( 'vb_email_validation', 0 ); ?>
+            emailValidation: <?php echo (int) get_option( 'vb_email_validation', 0 ); ?>,
+            scrollThreshold: <?php echo (int) get_option( 'vb_scroll_threshold', 0 ); ?>
         };
     </script>
     <?php
