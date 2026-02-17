@@ -1,0 +1,415 @@
+/* ─── Video Bubble – Frontend Styles ─────────────────────────────────────── */
+
+/* Container */
+#vb-container {
+    --vb-size: 120px;
+    --vb-margin-x: 24px;
+    --vb-margin-y: 24px;
+    --vb-border-color: #6c63ff;
+    --vb-panel-w: 340px;
+    --vb-panel-h: 560px;
+    --vb-radius: 16px;
+    position: fixed;
+    bottom: var(--vb-margin-y);
+    z-index: 999999;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;
+    line-height: 1.4;
+}
+#vb-container[data-position="bottom-right"] {
+    right: var(--vb-margin-x);
+}
+#vb-container[data-position="bottom-left"] {
+    left: var(--vb-margin-x);
+}
+
+/* ─── Collapsed Bubble ───────────────────────────────────────────────────── */
+
+#vb-bubble-wrap {
+    position: relative;
+    display: inline-block;
+}
+
+#vb-bubble {
+    width: var(--vb-size);
+    height: var(--vb-size);
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    border: 3px solid var(--vb-border-color);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    animation: vb-pop-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+#vb-bubble:hover {
+    transform: scale(1.07);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.22);
+}
+
+@keyframes vb-pop-in {
+    0% {
+        opacity: 0;
+        transform: scale(0.4) translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+#vb-bubble-video,
+#vb-bubble-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+    border: none;
+}
+
+#vb-bubble-iframe {
+    width: 180%;
+    height: 180%;
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    border: none;
+}
+
+#vb-bubble-text {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.65));
+    color: #fff;
+    font-size: var(--vb-overlay-fs, 15px);
+    font-weight: 600;
+    padding: 14px 6px var(--vb-overlay-pb, 6px);
+    pointer-events: none;
+    letter-spacing: 0.2px;
+}
+
+#vb-bubble-close {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    border: 2px solid #fff;
+    font-size: 12px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    z-index: 3;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+#vb-container:hover #vb-bubble-close {
+    opacity: 1;
+}
+#vb-container.vb-x-always #vb-bubble-close {
+    opacity: 1;
+}
+
+/* Hidden state */
+#vb-container.vb-bubble-hidden #vb-bubble-wrap {
+    display: none;
+}
+
+/* ─── Expanded Panel ─────────────────────────────────────────────────────── */
+
+#vb-panel {
+    position: absolute;
+    bottom: 0;
+    width: var(--vb-panel-w);
+    max-height: calc(100vh - var(--vb-margin-y) - 20px);
+    background: #fff;
+    border-radius: var(--vb-radius);
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    display: none;
+    flex-direction: column;
+    animation: vb-slide-up 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+#vb-container[data-position="bottom-right"] #vb-panel {
+    right: 0;
+}
+#vb-container[data-position="bottom-left"] #vb-panel {
+    left: 0;
+}
+
+#vb-panel.vb-panel-open {
+    display: flex;
+}
+
+@keyframes vb-slide-up {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.96);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+#vb-panel-inner {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#vb-panel-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.45);
+    color: #fff;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+    transition: background 0.2s;
+    padding: 0;
+    line-height: 1;
+}
+#vb-panel-close:hover {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+/* ─── Video View ─────────────────────────────────────────────────────────── */
+
+#vb-panel-video-view {
+    display: flex;
+    flex-direction: column;
+}
+
+#vb-panel-video {
+    width: 100%;
+    aspect-ratio: 9 / 16;
+    max-height: calc(100vh - var(--vb-margin-y) - 100px);
+    object-fit: cover;
+    background: #000;
+    display: block;
+    border: none;
+    border-radius: var(--vb-radius) var(--vb-radius) 0 0;
+}
+
+#vb-iframe-wrap {
+    position: relative;
+    padding-top: 177.78%; /* 16/9 = 1.7778 → portrait 9:16 */
+    width: 100%;
+    background: #000;
+    border-radius: var(--vb-radius) var(--vb-radius) 0 0;
+    overflow: hidden;
+    max-height: calc(100vh - var(--vb-margin-y) - 100px);
+}
+
+#vb-panel-iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+#vb-cta-btn {
+    display: block;
+    width: calc(100% - 32px);
+    margin: 16px auto;
+    padding: 12px 20px;
+    background: var(--vb-border-color);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+    letter-spacing: 0.2px;
+}
+#vb-cta-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+/* ─── Form View ──────────────────────────────────────────────────────────── */
+
+#vb-panel-form-view {
+    padding: 20px;
+}
+
+#vb-form-back {
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.2s;
+}
+#vb-form-back:hover {
+    color: #333;
+}
+
+#vb-panel-form-view h3 {
+    margin: 0 0 16px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.vb-field {
+    margin-bottom: 14px;
+}
+.vb-field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 5px;
+}
+.vb-field input,
+.vb-field textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    color: #1a1a1a;
+    background: #fafafa;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+    outline: none;
+}
+.vb-field input:focus,
+.vb-field textarea:focus {
+    border-color: var(--vb-border-color);
+    box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+    background: #fff;
+}
+.vb-field input.vb-input-error,
+.vb-field textarea.vb-input-error {
+    border-color: #e74c3c;
+}
+.vb-field input.vb-input-valid {
+    border-color: #27ae60;
+}
+.vb-field textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+#vb-email-status {
+    display: block;
+    font-size: 12px;
+    margin-top: 4px;
+    min-height: 16px;
+}
+#vb-email-status.vb-status-valid {
+    color: #27ae60;
+}
+#vb-email-status.vb-status-error {
+    color: #e74c3c;
+}
+#vb-email-status.vb-status-checking {
+    color: #999;
+}
+
+#vb-submit-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background: var(--vb-border-color);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    margin-top: 4px;
+}
+#vb-submit-btn:hover {
+    opacity: 0.9;
+}
+#vb-submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#vb-form-feedback {
+    text-align: center;
+    font-size: 13px;
+    margin-top: 10px;
+    min-height: 18px;
+}
+#vb-form-feedback.vb-fb-error {
+    color: #e74c3c;
+}
+#vb-form-feedback.vb-fb-success {
+    color: #27ae60;
+}
+
+/* ─── Success View ───────────────────────────────────────────────────────── */
+
+#vb-panel-success-view {
+    padding: 60px 30px;
+    text-align: center;
+}
+.vb-success-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #27ae60;
+    color: #fff;
+    font-size: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    animation: vb-pop-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+#vb-panel-success-view h3 {
+    margin: 0 0 8px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+#vb-panel-success-view p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+}
+
+/* ─── Responsive ─────────────────────────────────────────────────────────── */
+
+@media (max-width: 420px) {
+    #vb-panel {
+        --vb-panel-w: calc(100vw - 32px);
+        left: 16px !important;
+        right: 16px !important;
+    }
+}

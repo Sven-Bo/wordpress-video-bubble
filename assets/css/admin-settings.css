@@ -1,0 +1,117 @@
+/* ─── Video Bubble – Admin Settings Styles ───────────────────────────────── */
+
+.vb-admin-wrap {
+    max-width: 820px;
+    margin: 20px auto;
+    padding: 0 16px;
+}
+
+.vb-admin-wrap h1 {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 24px;
+}
+
+.vb-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.vb-card h2 {
+    margin: 0 0 12px;
+    font-size: 17px;
+    font-weight: 600;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.vb-card .form-table th {
+    width: 180px;
+    font-weight: 500;
+    font-size: 13px;
+    padding: 12px 10px 12px 0;
+    vertical-align: middle;
+}
+
+.vb-card .form-table td {
+    padding: 12px 0;
+}
+
+.vb-card .form-table input.regular-text {
+    width: 100%;
+    max-width: 400px;
+}
+
+/* ─── Video Rules ────────────────────────────────────────────────────────── */
+
+.vb-rule-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    padding: 12px;
+    background: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 6px;
+}
+
+.vb-rule-pages-wrap {
+    flex: 0 0 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.vb-rule-pages-wrap select.vb-rule-scope {
+    width: 100%;
+    padding: 7px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.vb-rule-pages-wrap select.vb-rule-page-select {
+    width: 100%;
+    min-height: 80px;
+    padding: 4px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.vb-rule-row input.vb-rule-video {
+    flex: 1;
+    padding: 7px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.vb-rule-row .vb-rule-remove {
+    background: none;
+    border: none;
+    color: #b00;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background 0.15s;
+    line-height: 1;
+    margin-top: 4px;
+}
+.vb-rule-row .vb-rule-remove:hover {
+    background: #fee;
+}
+
+#vb-add-rule {
+    margin-top: 6px;
+}
+
+/* Color picker fix */
+.vb-card .wp-picker-container {
+    display: inline-block;
+}
