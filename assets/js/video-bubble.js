@@ -40,8 +40,6 @@
 
     var scrollThreshold = config.scrollThreshold || 0;
     if (scrollThreshold > 0) {
-        container.classList.add('vb-scroll-hidden');
-
         function checkScroll() {
             var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
             var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;

@@ -3,7 +3,7 @@
  * Plugin Name: Video Bubble
  * Plugin URI:  https://pythonandvba.com
  * Description: A lightweight video bubble widget with muted autoplay, contact form, and webhook integration.
- * Version:     1.1.0
+ * Version:     1.1.1
  * Author:      PythonAndVBA
  * Author URI:  https://pythonandvba.com
  * License:     GPL v2 or later
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'VB_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'VB_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'VB_VERSION', '1.1.0' );
+define( 'VB_VERSION', '1.1.1' );
 
 // ─── Auto-Update from GitHub ─────────────────────────────────────────────────
 
@@ -474,8 +474,14 @@ function vb_render_bubble() {
 
     ?>
     <!-- Video Bubble -->
-    <?php $always_show_x = get_option( 'vb_always_show_x', 0 ); ?>
-    <div id="vb-container" style="<?php echo esc_attr( $css_vars ); ?>" data-position="<?php echo esc_attr( $bubble_position ); ?>" data-video-type="<?php echo $is_bunny ? 'bunny' : 'direct'; ?>"<?php echo $always_show_x ? ' class="vb-x-always"' : ''; ?>>
+    <?php
+    $always_show_x    = get_option( 'vb_always_show_x', 0 );
+    $scroll_threshold = get_option( 'vb_scroll_threshold', 0 );
+    $container_classes = array();
+    if ( $always_show_x ) $container_classes[] = 'vb-x-always';
+    if ( $scroll_threshold > 0 ) $container_classes[] = 'vb-scroll-hidden';
+    ?>
+    <div id="vb-container" style="<?php echo esc_attr( $css_vars ); ?>" data-position="<?php echo esc_attr( $bubble_position ); ?>" data-video-type="<?php echo $is_bunny ? 'bunny' : 'direct'; ?>"<?php echo $container_classes ? ' class="' . esc_attr( implode( ' ', $container_classes ) ) . '"' : ''; ?>>
 
         <!-- Bubble wrapper (positions the X relative to the circle) -->
         <div id="vb-bubble-wrap">
