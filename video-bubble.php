@@ -3,7 +3,7 @@
  * Plugin Name: Video Bubble
  * Plugin URI:  https://pythonandvba.com
  * Description: A lightweight video bubble widget with muted autoplay, contact form, and webhook integration.
- * Version:     1.2.1
+ * Version:     1.2.2
  * Author:      PythonAndVBA
  * Author URI:  https://pythonandvba.com
  * License:     GPL v2 or later
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'VB_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'VB_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'VB_VERSION', '1.2.1' );
+define( 'VB_VERSION', '1.2.2' );
 
 // ─── Auto-Update from GitHub ─────────────────────────────────────────────────
 
@@ -202,9 +202,9 @@ function vb_settings_page() {
                     <tr>
                         <th><label for="vb_webhook_url">Webhook URL</label></th>
                         <td>
-                            <input type="url" id="vb_webhook_url" name="vb_webhook_url"
+                            <input type="password" id="vb_webhook_url" name="vb_webhook_url"
                                    value="<?php echo esc_attr( $webhook_url ); ?>" class="regular-text"
-                                   placeholder="https://hooks.example.com/..." />
+                                   placeholder="https://hooks.example.com/..." autocomplete="off" />
                             <p class="description">Form submissions will be POSTed here as JSON.</p>
                         </td>
                     </tr>
@@ -224,9 +224,9 @@ function vb_settings_page() {
                     <tr>
                         <th><label for="vb_reoon_api_key">Reoon API Key</label></th>
                         <td>
-                            <input type="text" id="vb_reoon_api_key" name="vb_reoon_api_key"
+                            <input type="password" id="vb_reoon_api_key" name="vb_reoon_api_key"
                                    value="<?php echo esc_attr( $reoon_key ); ?>" class="regular-text"
-                                   placeholder="Your Reoon API key" />
+                                   placeholder="Your Reoon API key" autocomplete="off" />
                             <p class="description">Required when validation is enabled. <a href="https://emailverifier.reoon.com" target="_blank">Get a key</a></p>
                         </td>
                     </tr>
