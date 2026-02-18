@@ -36,6 +36,11 @@
     var emailCheckTimer = null;
     var isSubmitting = false;
 
+    // Helper: stop an iframe without polluting browser history
+    function stopIframe(iframe) {
+        if (iframe) iframe.src = 'about:blank';
+    }
+
     // ─── Scroll Threshold ────────────────────────────────────────────────────
 
     var scrollThreshold = config.scrollThreshold || 1;
@@ -64,7 +69,7 @@
         e.stopPropagation();
         container.classList.add('vb-bubble-hidden');
         // Stop bubble iframe when dismissed
-        if (bubbleIframe) bubbleIframe.src = '';
+        stopIframe(bubbleIframe);
     });
 
     // ─── Panel Controls ─────────────────────────────────────────────────────
@@ -82,14 +87,16 @@
         videoView.style.display = 'none';
         formView.style.display = 'block';
         if (panelVideo) panelVideo.pause();
-        if (panelIframe) panelIframe.src = '';
+        stopIframe(panelIframe);
     });
 
     formBack.addEventListener('click', function () {
         formView.style.display = 'none';
         videoView.style.display = 'flex';
         if (panelVideo) panelVideo.play();
-        if (panelIframe) panelIframe.src = panelIframe.getAttribute('data-src-muted') || panelIframe.getAttribute('data-src') || '';
+        if (panelIframe) {
+            panelIframe.src = panelIframe.getAttribute('data-src-muted') || panelIframe.getAttribute('data-src') || 'about:blank';
+        }
     });
 
     function openPanel() {
@@ -98,7 +105,7 @@
         panel.setAttribute('aria-hidden', 'false');
 
         // Stop bubble media
-        if (bubbleIframe) bubbleIframe.src = '';
+        stopIframe(bubbleIframe);
         if (bubbleVideo) bubbleVideo.pause();
 
         // Reset to video view
@@ -108,7 +115,7 @@
 
         if (videoType === 'bunny' && panelIframe) {
             // Load panel iframe — unmuted, from beginning
-            panelIframe.src = panelIframe.getAttribute('data-src') || '';
+            panelIframe.src = panelIframe.getAttribute('data-src') || 'about:blank';
         } else if (panelVideo) {
             // Play panel video unmuted from start
             panelVideo.muted = false;
@@ -126,12 +133,12 @@
 
         // Stop panel media
         if (panelVideo) panelVideo.pause();
-        if (panelIframe) panelIframe.src = '';
+        stopIframe(panelIframe);
 
         // Show bubble again with muted loop
         bubbleWrap.style.display = '';
         if (bubbleIframe) {
-            bubbleIframe.src = bubbleIframe.getAttribute('data-src') || '';
+            bubbleIframe.src = bubbleIframe.getAttribute('data-src') || 'about:blank';
         }
         if (bubbleVideo) {
             bubbleVideo.muted = true;
@@ -152,8 +159,8 @@
 
         // Stop all media
         if (panelVideo) panelVideo.pause();
-        if (panelIframe) panelIframe.src = '';
-        if (bubbleIframe) bubbleIframe.src = '';
+        stopIframe(panelIframe);
+        stopIframe(bubbleIframe);
 
         // Hide entire bubble
         container.classList.add('vb-bubble-hidden');
