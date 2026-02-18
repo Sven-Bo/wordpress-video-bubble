@@ -4,7 +4,7 @@ Tags: video, bubble, contact form, webhook, bunny stream
 Requires at least: 5.6
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.1.1
+Stable tag: 1.2.0
 License: GPLv2 or later
 
 A lightweight video bubble widget with muted autoplay, contact form, and webhook integration.
@@ -16,6 +16,12 @@ Video Bubble adds a small circular video to the corner of your site that plays o
 Think Warm Welcome, but simpler and self-hosted.
 
 == Changelog ==
+
+= 1.2.0 =
+* Scroll threshold now defaults to 1% (bubble always appears on scroll, never immediately)
+* Wider page selector dropdown so full page names are visible
+* Added save confirmation toast notification
+* Increased multi-select height for better page visibility
 
 = 1.1.1 =
 * Fixed flash of bubble on page load when scroll threshold is set

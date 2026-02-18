@@ -60,7 +60,7 @@
 }
 
 .vb-rule-pages-wrap {
-    flex: 0 0 220px;
+    flex: 0 0 340px;
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -76,11 +76,11 @@
 
 .vb-rule-pages-wrap select.vb-rule-page-select {
     width: 100%;
-    min-height: 80px;
+    min-height: 120px;
     padding: 4px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    font-size: 12px;
+    font-size: 13px;
 }
 
 .vb-rule-row input.vb-rule-video {
@@ -109,6 +109,30 @@
 
 #vb-add-rule {
     margin-top: 6px;
+}
+
+/* ─── Save Toast ─────────────────────────────────────────────────────────── */
+
+.vb-save-toast {
+    position: fixed;
+    top: 40px;
+    right: 20px;
+    background: #00a32a;
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    z-index: 99999;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+}
+.vb-save-toast.vb-toast-visible {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 /* Color picker fix */

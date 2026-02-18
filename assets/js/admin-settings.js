@@ -122,4 +122,14 @@
     // Color picker
     $('.vb-color-picker').wpColorPicker();
 
+    // ─── Save Toast ──────────────────────────────────────────────────────────
+
+    if (window.location.search.indexOf('settings-updated=true') !== -1) {
+        var $toast = $('<div class="vb-save-toast">Settings saved ✓</div>');
+        $('body').append($toast);
+        setTimeout(function () { $toast.addClass('vb-toast-visible'); }, 50);
+        setTimeout(function () { $toast.removeClass('vb-toast-visible'); }, 2500);
+        setTimeout(function () { $toast.remove(); }, 3000);
+    }
+
 })(jQuery);

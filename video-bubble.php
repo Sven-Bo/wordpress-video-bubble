@@ -3,7 +3,7 @@
  * Plugin Name: Video Bubble
  * Plugin URI:  https://pythonandvba.com
  * Description: A lightweight video bubble widget with muted autoplay, contact form, and webhook integration.
- * Version:     1.1.1
+ * Version:     1.2.0
  * Author:      PythonAndVBA
  * Author URI:  https://pythonandvba.com
  * License:     GPL v2 or later
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'VB_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'VB_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'VB_VERSION', '1.1.1' );
+define( 'VB_VERSION', '1.2.0' );
 
 // ─── Auto-Update from GitHub ─────────────────────────────────────────────────
 
@@ -182,7 +182,7 @@ function vb_settings_page() {
     $success_message   = get_option( 'vb_success_message', "Thanks for reaching out. I'll get back to you within 24h." );
     $hide_on_mobile    = get_option( 'vb_hide_on_mobile', 0 );
     $always_show_x     = get_option( 'vb_always_show_x', 0 );
-    $scroll_threshold  = get_option( 'vb_scroll_threshold', 0 );
+    $scroll_threshold  = get_option( 'vb_scroll_threshold', 1 );
     $email_validation  = get_option( 'vb_email_validation', 0 );
     $reoon_mode        = get_option( 'vb_reoon_mode', 'quick' );
     $email_accepted    = get_option( 'vb_email_accepted', array( 'valid', 'safe', 'unknown' ) );
@@ -313,8 +313,8 @@ function vb_settings_page() {
                         <th><label for="vb_scroll_threshold">Show After Scroll (%)</label></th>
                         <td>
                             <input type="number" id="vb_scroll_threshold" name="vb_scroll_threshold"
-                                   value="<?php echo esc_attr( $scroll_threshold ); ?>" min="0" max="100" step="1" />
-                            <p class="description">Show the bubble only after the visitor scrolls this percentage of the page. 0 = show immediately.</p>
+                                   value="<?php echo esc_attr( $scroll_threshold ); ?>" min="1" max="100" step="1" />
+                            <p class="description">Show the bubble only after the visitor scrolls this percentage of the page.</p>
                         </td>
                     </tr>
                     <tr>
@@ -476,10 +476,9 @@ function vb_render_bubble() {
     <!-- Video Bubble -->
     <?php
     $always_show_x    = get_option( 'vb_always_show_x', 0 );
-    $scroll_threshold = get_option( 'vb_scroll_threshold', 0 );
-    $container_classes = array();
+    $scroll_threshold = get_option( 'vb_scroll_threshold', 1 );
+    $container_classes = array( 'vb-scroll-hidden' );
     if ( $always_show_x ) $container_classes[] = 'vb-x-always';
-    if ( $scroll_threshold > 0 ) $container_classes[] = 'vb-scroll-hidden';
     ?>
     <div id="vb-container" style="<?php echo esc_attr( $css_vars ); ?>" data-position="<?php echo esc_attr( $bubble_position ); ?>" data-video-type="<?php echo $is_bunny ? 'bunny' : 'direct'; ?>"<?php echo $container_classes ? ' class="' . esc_attr( implode( ' ', $container_classes ) ) . '"' : ''; ?>>
 
@@ -563,7 +562,7 @@ function vb_render_bubble() {
             ajaxUrl: <?php echo wp_json_encode( admin_url( 'admin-ajax.php' ) ); ?>,
             nonce: <?php echo wp_json_encode( wp_create_nonce( 'vb_nonce' ) ); ?>,
             emailValidation: <?php echo (int) get_option( 'vb_email_validation', 0 ); ?>,
-            scrollThreshold: <?php echo (int) get_option( 'vb_scroll_threshold', 0 ); ?>
+            scrollThreshold: <?php echo max( 1, (int) get_option( 'vb_scroll_threshold', 1 ) ); ?>
         };
     </script>
     <?php
