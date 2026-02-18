@@ -3,7 +3,7 @@
  * Plugin Name: Video Bubble
  * Plugin URI:  https://pythonandvba.com
  * Description: A lightweight video bubble widget with muted autoplay, contact form, and webhook integration.
- * Version:     1.2.7
+ * Version:     1.2.8
  * Author:      PythonAndVBA
  * Author URI:  https://pythonandvba.com
  * License:     GPL v2 or later
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'VB_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'VB_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'VB_VERSION', '1.2.7' );
+define( 'VB_VERSION', '1.2.8' );
 
 // ─── Auto-Update from GitHub ─────────────────────────────────────────────────
 
@@ -615,6 +615,22 @@ function vb_verify_email() {
     }
 }
 
+// ─── Visitor IP Helper ───────────────────────────────────────────────────────
+
+function vb_get_visitor_ip() {
+    $headers = array( 'HTTP_CF_CONNECTING_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_REAL_IP', 'REMOTE_ADDR' );
+    foreach ( $headers as $header ) {
+        if ( ! empty( $_SERVER[ $header ] ) ) {
+            // X-Forwarded-For may contain a chain: "client, proxy1, proxy2"
+            $ip = trim( explode( ',', $_SERVER[ $header ] )[0] );
+            if ( filter_var( $ip, FILTER_VALIDATE_IP ) ) {
+                return $ip;
+            }
+        }
+    }
+    return '';
+}
+
 // ─── AJAX: Webhook Proxy ─────────────────────────────────────────────────────
 
 add_action( 'wp_ajax_vb_submit_form', 'vb_submit_form' );
@@ -644,7 +660,7 @@ function vb_submit_form() {
         'email'     => $email,
         'message'   => $message,
         'page_url'  => sanitize_url( $_POST['page_url'] ?? '' ),
-        'ip'        => $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? '',
+        'ip'        => vb_get_visitor_ip(),
         'timestamp' => current_time( 'c' ),
     );
 
