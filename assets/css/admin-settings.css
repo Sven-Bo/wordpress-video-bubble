@@ -1,7 +1,7 @@
 /* ─── Video Bubble – Admin Settings Styles ───────────────────────────────── */
 
 .vb-admin-wrap {
-    max-width: 820px;
+    max-width: 960px;
     margin: 20px auto;
     padding: 0 16px;
 }
@@ -69,7 +69,8 @@
 }
 
 .vb-rule-pages-wrap select.vb-rule-scope {
-    width: 100%;
+    width: 50%;
+    max-width: 280px;
     padding: 7px 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -78,7 +79,7 @@
 
 .vb-rule-pages-wrap select.vb-rule-page-select {
     width: 100%;
-    min-height: 120px;
+    min-height: 160px;
     padding: 4px;
     border: 1px solid #ccc;
     border-radius: 4px;
