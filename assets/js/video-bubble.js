@@ -73,7 +73,6 @@
         fresh.setAttribute('loading', 'lazy');
         fresh.setAttribute('allow', 'autoplay; encrypted-media');
         fresh.setAttribute('allowfullscreen', '');
-        fresh.style.cssText = 'width:100%;height:100%;border:none;border-radius:inherit;display:block;';
         anchor.parentNode.insertBefore(fresh, anchor.nextSibling);
         return fresh;
     }
