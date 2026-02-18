@@ -36,9 +36,46 @@
     var emailCheckTimer = null;
     var isSubmitting = false;
 
-    // Helper: stop an iframe without polluting browser history
-    function stopIframe(iframe) {
-        if (iframe) iframe.src = 'about:blank';
+    // Cache iframe URLs before any removal (references go stale after remove)
+    var bubbleIframeSrc      = bubbleIframe ? (bubbleIframe.getAttribute('data-src') || '') : '';
+    var panelIframeSrc       = panelIframe  ? (panelIframe.getAttribute('data-src') || '') : '';
+    var panelIframeSrcMuted  = panelIframe  ? (panelIframe.getAttribute('data-src-muted') || panelIframeSrc) : '';
+
+    // ─── Iframe helpers (zero history pollution) ─────────────────────────────
+    // Setting iframe.src ALWAYS adds a browser history entry.  The only
+    // reliable way to avoid this is to remove the iframe from the DOM to
+    // stop it, and insert a brand-new element to start it.
+
+    // Store insertion anchors so we can put iframes back in the right spot.
+    var bubbleIframeAnchor = bubbleIframe ? createAnchor(bubbleIframe) : null;
+    var panelIframeAnchor  = panelIframe  ? createAnchor(panelIframe)  : null;
+
+    function createAnchor(el) {
+        var marker = document.createComment(el.id + '-anchor');
+        el.parentNode.insertBefore(marker, el);
+        return marker;
+    }
+
+    function stopIframe(iframeId) {
+        var el = document.getElementById(iframeId);
+        if (el && el.parentNode) el.parentNode.removeChild(el);
+    }
+
+    function loadIframe(iframeId, anchor, url) {
+        if (!anchor) return null;
+        // Remove any existing instance first
+        var old = document.getElementById(iframeId);
+        if (old && old.parentNode) old.parentNode.removeChild(old);
+        // Build a fresh iframe — never touches an existing .src
+        var fresh = document.createElement('iframe');
+        fresh.id = iframeId;
+        fresh.src = url;
+        fresh.setAttribute('loading', 'lazy');
+        fresh.setAttribute('allow', 'autoplay; encrypted-media');
+        fresh.setAttribute('allowfullscreen', '');
+        fresh.style.cssText = 'width:100%;height:100%;border:none;border-radius:inherit;display:block;';
+        anchor.parentNode.insertBefore(fresh, anchor.nextSibling);
+        return fresh;
     }
 
     // ─── Scroll Threshold ────────────────────────────────────────────────────
@@ -69,7 +106,7 @@
         e.stopPropagation();
         container.classList.add('vb-bubble-hidden');
         // Stop bubble iframe when dismissed
-        stopIframe(bubbleIframe);
+        stopIframe('vb-bubble-iframe');
     });
 
     // ─── Panel Controls ─────────────────────────────────────────────────────
@@ -87,15 +124,15 @@
         videoView.style.display = 'none';
         formView.style.display = 'block';
         if (panelVideo) panelVideo.pause();
-        stopIframe(panelIframe);
+        stopIframe('vb-panel-iframe');
     });
 
     formBack.addEventListener('click', function () {
         formView.style.display = 'none';
         videoView.style.display = 'flex';
         if (panelVideo) panelVideo.play();
-        if (panelIframe) {
-            panelIframe.src = panelIframe.getAttribute('data-src-muted') || panelIframe.getAttribute('data-src') || 'about:blank';
+        if (panelIframeAnchor && panelIframeSrcMuted) {
+            loadIframe('vb-panel-iframe', panelIframeAnchor, panelIframeSrcMuted);
         }
     });
 
@@ -105,7 +142,7 @@
         panel.setAttribute('aria-hidden', 'false');
 
         // Stop bubble media
-        stopIframe(bubbleIframe);
+        stopIframe('vb-bubble-iframe');
         if (bubbleVideo) bubbleVideo.pause();
 
         // Reset to video view
@@ -113,9 +150,9 @@
         formView.style.display = 'none';
         successView.style.display = 'none';
 
-        if (videoType === 'bunny' && panelIframe) {
+        if (videoType === 'bunny' && panelIframeAnchor && panelIframeSrc) {
             // Load panel iframe — unmuted, from beginning
-            panelIframe.src = panelIframe.getAttribute('data-src') || 'about:blank';
+            loadIframe('vb-panel-iframe', panelIframeAnchor, panelIframeSrc);
         } else if (panelVideo) {
             // Play panel video unmuted from start
             panelVideo.muted = false;
@@ -133,12 +170,12 @@
 
         // Stop panel media
         if (panelVideo) panelVideo.pause();
-        stopIframe(panelIframe);
+        stopIframe('vb-panel-iframe');
 
         // Show bubble again with muted loop
         bubbleWrap.style.display = '';
-        if (bubbleIframe) {
-            bubbleIframe.src = bubbleIframe.getAttribute('data-src') || 'about:blank';
+        if (bubbleIframeAnchor && bubbleIframeSrc) {
+            loadIframe('vb-bubble-iframe', bubbleIframeAnchor, bubbleIframeSrc);
         }
         if (bubbleVideo) {
             bubbleVideo.muted = true;
@@ -159,8 +196,8 @@
 
         // Stop all media
         if (panelVideo) panelVideo.pause();
-        stopIframe(panelIframe);
-        stopIframe(bubbleIframe);
+        stopIframe('vb-panel-iframe');
+        stopIframe('vb-bubble-iframe');
 
         // Hide entire bubble
         container.classList.add('vb-bubble-hidden');

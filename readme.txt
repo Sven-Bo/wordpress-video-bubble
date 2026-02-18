@@ -4,7 +4,7 @@ Tags: video, bubble, contact form, webhook, bunny stream
 Requires at least: 5.6
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.2.4
+Stable tag: 1.2.5
 License: GPLv2 or later
 
 A lightweight video bubble widget with muted autoplay, contact form, and webhook integration.
@@ -17,8 +17,11 @@ Think Warm Welcome, but simpler and self-hosted.
 
 == Changelog ==
 
+= 1.2.5 =
+* Fixed browser back button requiring multiple clicks (iframes are now removed/recreated instead of src-swapped)
+
 = 1.2.4 =
-* Fixed browser back button requiring multiple clicks after interacting with the bubble
+* Initial attempt at fixing browser history pollution from iframe src changes
 
 = 1.2.3 =
 * Wider page selector and admin layout (960px max-width, taller multi-select)
