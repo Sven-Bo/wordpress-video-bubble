@@ -53,7 +53,7 @@
         var list = [];
         for (var i = 0; i < el.attributes.length; i++) {
             var a = el.attributes[i];
-            if (a.name !== 'src' && a.name !== 'id') list.push({ name: a.name, value: a.value });
+            if (a.name !== 'src' && a.name !== 'id' && a.name !== 'data-src' && a.name !== 'data-src-muted') list.push({ name: a.name, value: a.value });
         }
         return list;
     }

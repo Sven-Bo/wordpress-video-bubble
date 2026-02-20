@@ -3,7 +3,7 @@
  * Plugin Name: Video Bubble
  * Plugin URI:  https://pythonandvba.com
  * Description: A lightweight video bubble widget with muted autoplay, contact form, and webhook integration.
- * Version:     1.2.9
+ * Version:     1.3.0
  * Author:      PythonAndVBA
  * Author URI:  https://pythonandvba.com
  * License:     GPL v2 or later
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'VB_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'VB_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'VB_VERSION', '1.2.9' );
+define( 'VB_VERSION', '1.3.0' );
 
 // ─── Auto-Update from GitHub ─────────────────────────────────────────────────
 
@@ -492,6 +492,7 @@ function vb_render_bubble() {
                         data-src="<?php echo esc_url( vb_bunny_embed_url( $matched_video, true, true, true, false ) ); ?>"
                         allow="autoplay; encrypted-media"
                         loading="lazy"
+                        data-no-lazy="1"
                         scrolling="no"
                         frameborder="0"></iframe>
             <?php else : ?>
@@ -515,6 +516,7 @@ function vb_render_bubble() {
                                     data-src="<?php echo esc_url( vb_bunny_embed_url( $matched_video, true, true, false ) ); ?>"
                                     data-src-muted="<?php echo esc_url( vb_bunny_embed_url( $matched_video, true, true, true ) ); ?>"
                                     loading="lazy"
+                                    data-no-lazy="1"
                                     allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
                                     allowfullscreen="true"></iframe>
                         </div>
