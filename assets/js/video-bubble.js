@@ -46,6 +46,20 @@
     // reliable way to avoid this is to remove the iframe from the DOM to
     // stop it, and insert a brand-new element to start it.
 
+    // Snapshot every attribute from the original iframes so we can
+    // faithfully recreate them later (allow, allowfullscreen, etc.).
+    function snapshotAttrs(el) {
+        if (!el) return [];
+        var list = [];
+        for (var i = 0; i < el.attributes.length; i++) {
+            var a = el.attributes[i];
+            if (a.name !== 'src' && a.name !== 'id') list.push({ name: a.name, value: a.value });
+        }
+        return list;
+    }
+    var bubbleIframeAttrs = snapshotAttrs(bubbleIframe);
+    var panelIframeAttrs  = snapshotAttrs(panelIframe);
+
     // Store insertion anchors so we can put iframes back in the right spot.
     var bubbleIframeAnchor = bubbleIframe ? createAnchor(bubbleIframe) : null;
     var panelIframeAnchor  = panelIframe  ? createAnchor(panelIframe)  : null;
@@ -61,18 +75,23 @@
         if (el && el.parentNode) el.parentNode.removeChild(el);
     }
 
-    function loadIframe(iframeId, anchor, url) {
+    function loadIframe(iframeId, anchor, url, attrs) {
         if (!anchor) return null;
         // Remove any existing instance first
         var old = document.getElementById(iframeId);
         if (old && old.parentNode) old.parentNode.removeChild(old);
-        // Build a fresh iframe — never touches an existing .src
+        // Build a fresh iframe with the same attributes as the original
         var fresh = document.createElement('iframe');
         fresh.id = iframeId;
+        for (var i = 0; i < attrs.length; i++) {
+            // Override loading to eager so it loads immediately
+            if (attrs[i].name === 'loading') {
+                fresh.setAttribute('loading', 'eager');
+            } else {
+                fresh.setAttribute(attrs[i].name, attrs[i].value);
+            }
+        }
         fresh.src = url;
-        fresh.setAttribute('loading', 'lazy');
-        fresh.setAttribute('allow', 'autoplay; encrypted-media');
-        fresh.setAttribute('allowfullscreen', '');
         anchor.parentNode.insertBefore(fresh, anchor.nextSibling);
         return fresh;
     }
@@ -131,7 +150,7 @@
         videoView.style.display = 'flex';
         if (panelVideo) panelVideo.play();
         if (panelIframeAnchor && panelIframeSrcMuted) {
-            loadIframe('vb-panel-iframe', panelIframeAnchor, panelIframeSrcMuted);
+            loadIframe('vb-panel-iframe', panelIframeAnchor, panelIframeSrcMuted, panelIframeAttrs);
         }
     });
 
@@ -151,7 +170,7 @@
 
         if (videoType === 'bunny' && panelIframeAnchor && panelIframeSrc) {
             // Load panel iframe — unmuted, from beginning
-            loadIframe('vb-panel-iframe', panelIframeAnchor, panelIframeSrc);
+            loadIframe('vb-panel-iframe', panelIframeAnchor, panelIframeSrc, panelIframeAttrs);
         } else if (panelVideo) {
             // Play panel video unmuted from start
             panelVideo.muted = false;
@@ -174,7 +193,7 @@
         // Show bubble again with muted loop
         bubbleWrap.style.display = '';
         if (bubbleIframeAnchor && bubbleIframeSrc) {
-            loadIframe('vb-bubble-iframe', bubbleIframeAnchor, bubbleIframeSrc);
+            loadIframe('vb-bubble-iframe', bubbleIframeAnchor, bubbleIframeSrc, bubbleIframeAttrs);
         }
         if (bubbleVideo) {
             bubbleVideo.muted = true;

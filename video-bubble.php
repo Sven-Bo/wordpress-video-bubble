@@ -3,7 +3,7 @@
  * Plugin Name: Video Bubble
  * Plugin URI:  https://pythonandvba.com
  * Description: A lightweight video bubble widget with muted autoplay, contact form, and webhook integration.
- * Version:     1.2.8
+ * Version:     1.2.9
  * Author:      PythonAndVBA
  * Author URI:  https://pythonandvba.com
  * License:     GPL v2 or later
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'VB_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'VB_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'VB_VERSION', '1.2.8' );
+define( 'VB_VERSION', '1.2.9' );
 
 // ─── Auto-Update from GitHub ─────────────────────────────────────────────────
 
