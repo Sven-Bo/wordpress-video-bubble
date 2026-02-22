@@ -418,12 +418,44 @@
     font-size: 14px;
 }
 
+/* ─── Hide on Mobile (cache-safe, CSS-only) ─────────────────────────────── */
+
+@media (max-width: 768px) {
+    #vb-container.vb-hide-mobile {
+        display: none !important;
+    }
+}
+
 /* ─── Responsive ─────────────────────────────────────────────────────────── */
 
-@media (max-width: 420px) {
+@media (max-width: 480px) {
+    /* Smaller bubble on mobile */
+    #vb-container {
+        --vb-size: 90px;
+        --vb-margin-x: 12px;
+        --vb-margin-y: 12px;
+    }
+
+    /* Panel takes nearly full screen on mobile */
+    #vb-container,
+    #vb-container[data-position="bottom-right"],
+    #vb-container[data-position="bottom-left"] {
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+    }
+
     #vb-panel {
-        --vb-panel-w: calc(100vw - 32px);
-        left: 16px !important;
-        right: 16px !important;
+        --vb-panel-w: 100vw;
+        width: 100vw !important;
+        max-height: 100vh;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0;
+        border-radius: var(--vb-radius) var(--vb-radius) 0 0;
+    }
+
+    #vb-iframe-wrap {
+        max-height: calc(100vh - 120px);
     }
 }

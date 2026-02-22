@@ -3,7 +3,7 @@
  * Plugin Name: Video Bubble
  * Plugin URI:  https://pythonandvba.com
  * Description: A lightweight video bubble widget with muted autoplay, contact form, and webhook integration.
- * Version:     1.3.0
+ * Version:     1.3.1
  * Author:      PythonAndVBA
  * Author URI:  https://pythonandvba.com
  * License:     GPL v2 or later
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'VB_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'VB_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'VB_VERSION', '1.3.0' );
+define( 'VB_VERSION', '1.3.1' );
 
 // ─── Auto-Update from GitHub ─────────────────────────────────────────────────
 
@@ -410,10 +410,8 @@ function vb_render_bubble() {
         return;
     }
 
-    // Hide on mobile if enabled
-    if ( get_option( 'vb_hide_on_mobile', 0 ) && wp_is_mobile() ) {
-        return;
-    }
+    // Mobile hiding is now handled via CSS media query (cache-safe).
+    // The vb-hide-mobile class is added to the container below.
 
     $video_rules = json_decode( get_option( 'vb_video_rules', '[]' ), true );
     if ( empty( $video_rules ) ) {
@@ -477,8 +475,10 @@ function vb_render_bubble() {
     <?php
     $always_show_x    = get_option( 'vb_always_show_x', 0 );
     $scroll_threshold = get_option( 'vb_scroll_threshold', 1 );
+    $hide_on_mobile    = get_option( 'vb_hide_on_mobile', 0 );
     $container_classes = array( 'vb-scroll-hidden' );
-    if ( $always_show_x ) $container_classes[] = 'vb-x-always';
+    if ( $always_show_x )  $container_classes[] = 'vb-x-always';
+    if ( $hide_on_mobile ) $container_classes[] = 'vb-hide-mobile';
     ?>
     <div id="vb-container" style="<?php echo esc_attr( $css_vars ); ?>" data-position="<?php echo esc_attr( $bubble_position ); ?>" data-video-type="<?php echo $is_bunny ? 'bunny' : 'direct'; ?>"<?php echo $container_classes ? ' class="' . esc_attr( implode( ' ', $container_classes ) ) . '"' : ''; ?>>
 
