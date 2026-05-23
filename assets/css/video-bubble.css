@@ -5,7 +5,7 @@
     --vb-size: 120px;
     --vb-margin-x: 24px;
     --vb-margin-y: 24px;
-    --vb-border-color: #6c63ff;
+    --vb-accent: #6c63ff;
     --vb-panel-w: 340px;
     --vb-panel-h: 560px;
     --vb-radius: 16px;
@@ -24,9 +24,12 @@
 
 /* ─── Defensive Resets ───────────────────────────────────────────────────── */
 /* WordPress themes (e.g. Themify, block themes) and WP core globals can inject
-   outline, border, or box-shadow on iframe/button/div elements. Reset them
-   inside our isolated container so they cannot draw a stray rectangle around
-   the circular bubble, then re-assert the plugin's intentional decoration. */
+   outline, border, or box-shadow on iframe/button/div elements — sometimes via
+   broad substring selectors like html :where([style*="border-color"]) which
+   accidentally match our CSS custom properties on the container's inline style.
+   Reset them inside our isolated container so they cannot draw a stray
+   rectangle around the circular bubble, then re-assert the plugin's
+   intentional decoration. */
 
 #vb-container,
 #vb-container *,
@@ -36,11 +39,13 @@
     box-sizing: border-box;
 }
 
+#vb-container,
 #vb-bubble-wrap,
 #vb-bubble-iframe,
 #vb-bubble-video,
 #vb-bubble-thumb {
     border: 0 !important;
+    border-style: none !important;
     box-shadow: none !important;
     background: transparent !important;
 }
@@ -59,7 +64,7 @@
     overflow: hidden;
     cursor: pointer;
     position: relative;
-    border: 3px solid var(--vb-border-color) !important;
+    border: 3px solid var(--vb-accent) !important;
     box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18) !important;
     background: transparent !important;
     transition: transform 0.25s ease, box-shadow 0.25s ease;
@@ -282,7 +287,7 @@
     width: calc(100% - 32px);
     margin: 16px auto;
     padding: 12px 20px;
-    background: var(--vb-border-color);
+    background: var(--vb-accent);
     color: #fff;
     border: none;
     border-radius: 10px;
@@ -353,7 +358,7 @@
 }
 .vb-field input:focus,
 .vb-field textarea:focus {
-    border-color: var(--vb-border-color);
+    border-color: var(--vb-accent);
     box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
     background: #fff;
 }
@@ -389,7 +394,7 @@
     display: block;
     width: 100%;
     padding: 12px;
-    background: var(--vb-border-color);
+    background: var(--vb-accent);
     color: #fff;
     border: none;
     border-radius: 10px;

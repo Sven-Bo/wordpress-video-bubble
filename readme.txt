@@ -4,7 +4,7 @@ Tags: video, bubble, contact form, webhook, bunny stream
 Requires at least: 5.6
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.3.2
+Stable tag: 1.3.3
 License: GPLv2 or later
 
 A lightweight video bubble widget with muted autoplay, contact form, and webhook integration.
@@ -16,6 +16,9 @@ Video Bubble adds a small circular video to the corner of your site that plays o
 Think Warm Welcome, but simpler and self-hosted.
 
 == Changelog ==
+
+= 1.3.3 =
+* Fixed rectangle still showing around bubble on Themify themes — root cause was Themify's `:where([style*="border-color"])` rule matching our `--vb-border-color` custom property by substring. Renamed the variable to `--vb-accent` (no functional change) and added an explicit border reset on the container for defense.
 
 = 1.3.2 =
 * Fixed stray rectangular outline drawn around the circular bubble on sites where the theme or WP core injects global outline/border styles on iframe/button elements (defensive CSS resets inside the widget container)

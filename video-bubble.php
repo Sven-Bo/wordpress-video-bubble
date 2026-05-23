@@ -3,7 +3,7 @@
  * Plugin Name: Video Bubble
  * Plugin URI:  https://pythonandvba.com
  * Description: A lightweight video bubble widget with muted autoplay, contact form, and webhook integration.
- * Version:     1.3.2
+ * Version:     1.3.3
  * Author:      PythonAndVBA
  * Author URI:  https://pythonandvba.com
  * License:     GPL v2 or later
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'VB_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'VB_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'VB_VERSION', '1.3.2' );
+define( 'VB_VERSION', '1.3.3' );
 
 // ─── Auto-Update from GitHub ─────────────────────────────────────────────────
 
@@ -466,7 +466,7 @@ function vb_render_bubble() {
     // Build CSS custom properties
     $pos_x_prop = ( $bubble_position === 'bottom-left' ) ? 'left' : 'right';
     $css_vars   = sprintf(
-        '--vb-size:%dpx;--vb-margin-x:%dpx;--vb-margin-y:%dpx;--vb-border-color:%s;--vb-pos-x-prop:%s;--vb-overlay-fs:%dpx;--vb-overlay-pb:%dpx;',
+        '--vb-size:%dpx;--vb-margin-x:%dpx;--vb-margin-y:%dpx;--vb-accent:%s;--vb-pos-x-prop:%s;--vb-overlay-fs:%dpx;--vb-overlay-pb:%dpx;',
         $bubble_size, $margin_x, $margin_y, $border_color, $pos_x_prop, $overlay_font_size, $overlay_pad_btm
     );
 
