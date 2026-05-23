@@ -4,7 +4,7 @@ Tags: video, bubble, contact form, webhook, bunny stream
 Requires at least: 5.6
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.3.1
+Stable tag: 1.3.2
 License: GPLv2 or later
 
 A lightweight video bubble widget with muted autoplay, contact form, and webhook integration.
@@ -16,6 +16,10 @@ Video Bubble adds a small circular video to the corner of your site that plays o
 Think Warm Welcome, but simpler and self-hosted.
 
 == Changelog ==
+
+= 1.3.2 =
+* Fixed stray rectangular outline drawn around the circular bubble on sites where the theme or WP core injects global outline/border styles on iframe/button elements (defensive CSS resets inside the widget container)
+* Close (×) button now uses visibility instead of opacity to hide when idle, so themes that override opacity cannot force the button into view
 
 = 1.3.1 =
 * Fixed bubble showing on mobile despite "Hide on Mobile" being enabled (now uses CSS media query instead of server-side check, works with page caching)

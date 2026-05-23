@@ -22,6 +22,29 @@
     left: var(--vb-margin-x);
 }
 
+/* ─── Defensive Resets ───────────────────────────────────────────────────── */
+/* WordPress themes (e.g. Themify, block themes) and WP core globals can inject
+   outline, border, or box-shadow on iframe/button/div elements. Reset them
+   inside our isolated container so they cannot draw a stray rectangle around
+   the circular bubble, then re-assert the plugin's intentional decoration. */
+
+#vb-container,
+#vb-container *,
+#vb-container *::before,
+#vb-container *::after {
+    outline: 0 !important;
+    box-sizing: border-box;
+}
+
+#vb-bubble-wrap,
+#vb-bubble-iframe,
+#vb-bubble-video,
+#vb-bubble-thumb {
+    border: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+}
+
 /* ─── Collapsed Bubble ───────────────────────────────────────────────────── */
 
 #vb-bubble-wrap {
@@ -36,10 +59,14 @@
     overflow: hidden;
     cursor: pointer;
     position: relative;
-    border: 3px solid var(--vb-border-color);
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
+    border: 3px solid var(--vb-border-color) !important;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18) !important;
+    background: transparent !important;
     transition: transform 0.25s ease, box-shadow 0.25s ease;
     animation: vb-pop-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    /* Force stacking context so overflow:hidden + border-radius always clips
+       child iframes on every renderer (defense-in-depth). */
+    isolation: isolate;
 }
 #vb-bubble:hover {
     transform: scale(1.07);
@@ -103,21 +130,27 @@
     width: 22px;
     height: 22px;
     border-radius: 50%;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.6) !important;
     color: #fff;
-    border: 2px solid #fff;
+    border: 2px solid #fff !important;
+    box-shadow: none !important;
     font-size: 12px;
     line-height: 1;
     cursor: pointer;
     padding: 0;
     z-index: 3;
+    /* visibility (not opacity) so a theme that overrides opacity cannot force
+       the button into view and contribute a stray rectangle. */
+    visibility: hidden;
     opacity: 0;
-    transition: opacity 0.2s;
+    transition: opacity 0.2s, visibility 0.2s;
 }
 #vb-container:hover #vb-bubble-close {
+    visibility: visible;
     opacity: 1;
 }
 #vb-container.vb-x-always #vb-bubble-close {
+    visibility: visible;
     opacity: 1;
 }
 
