@@ -116,14 +116,22 @@
         var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
         if (docHeight <= 0) return;
         var scrolled = (scrollTop / docHeight) * 100;
-        if (scrolled >= scrollThreshold) {
+        if (scrolled >= scrollThreshold &&
+                getComputedStyle(container).getPropertyValue('--vb-styles-ready').trim() === '1') {
+            container.style.removeProperty('display');
             container.classList.remove('vb-scroll-hidden');
             container.classList.add('vb-scroll-visible');
             window.removeEventListener('scroll', checkScroll);
+            document.removeEventListener('load', checkScroll, true);
+            window.removeEventListener('pageshow', checkScroll);
         }
     }
 
     window.addEventListener('scroll', checkScroll, { passive: true });
+    // Deferred stylesheets and restored scroll positions must respect the gate too.
+    document.addEventListener('load', checkScroll, true);
+    window.addEventListener('pageshow', checkScroll);
+    checkScroll();
 
     // ─── Bubble Click → Open Panel ──────────────────────────────────────────
 
@@ -345,24 +353,28 @@
         var email = form.querySelector('[name="email"]').value.trim();
         var message = form.querySelector('[name="message"]').value.trim();
 
-        // Basic validation
-        if (!name || !email || !message) {
-            setFeedback('Please fill in all fields.', 'error');
+        if (!name) {
+            showFieldError('vb-field-name', 'What should I call you?');
             return;
         }
-
-        if (!isValidEmailFormat(email)) {
-            setFeedback('Please enter a valid email address.', 'error');
+        if (apiContact && name.length > 200) {
+            showFieldError('vb-field-name', 'Please use a shorter name. Your first name is fine.');
             return;
         }
-
+        if (!isValidEmailFormat(email) || (apiContact && email.length > 320)) {
+            showFieldError('vb-field-email', 'Please check your email address so I can reply to you.');
+            return;
+        }
         if (!apiContact && !emailValid) {
-            setFeedback('Please wait for email verification or use a valid email.', 'error');
+            showFieldError('vb-field-email', 'Please wait a moment while I check your email address.');
             return;
         }
-
-        if (apiContact && (name.length > 200 || email.length > 320 || message.length < 10 || message.length > 5000)) {
-            setFeedback('Please use a message of 10 to 5000 characters, a name up to 200 characters, and an email up to 320 characters.', 'error');
+        if (!message || (apiContact && message.length < 10)) {
+            showFieldError('vb-field-message', 'Could you tell me a little more about what you need help with?');
+            return;
+        }
+        if (apiContact && message.length > 5000) {
+            showFieldError('vb-field-message', 'Please shorten your message a little. You can share more details when I reply.');
             return;
         }
 
@@ -394,15 +406,21 @@
             };
         }
         fetch(apiContact ? config.webhookUrl.replace(/\/$/, '') : config.ajaxUrl, options)
-            .then(function (r) { return r.json(); })
+            .then(function (r) { return r.json().then(function (res) { res.httpStatus = r.status; return res; }); })
             .then(function (res) {
                 if (apiContact ? res.status === 'success' : res.success) {
                     // Show success view
                     formView.style.display = 'none';
                     successView.style.display = 'block';
                 } else {
-                    var msg = apiContact ? (res.message || 'Something went wrong.') : ((res.data && res.data.message) ? res.data.message : 'Something went wrong.');
-                    setFeedback(msg, 'error');
+                    // API diagnostics are for logs, never visitor-facing copy.
+                    if (apiContact && res.httpStatus === 422) {
+                        showFieldError('vb-field-email', 'Please check your email address, or try another one so I can reply to you.');
+                    } else if (apiContact && res.httpStatus === 429) {
+                        setFeedback('Please give me a little time to receive your earlier messages, then try again.', 'error');
+                    } else {
+                        setFeedback('Your message could not be sent. Please try again in a moment, or email sven@pythonandvba.com.', 'error');
+                    }
                 }
             })
             .catch(function () {
@@ -414,6 +432,11 @@
                 submitBtn.textContent = 'Send';
             });
     });
+
+    function showFieldError(id, message) {
+        setFeedback(message, 'error');
+        document.getElementById(id).focus();
+    }
 
     function setFeedback(msg, type) {
         feedback.textContent = msg;

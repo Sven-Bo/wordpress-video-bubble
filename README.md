@@ -72,3 +72,11 @@ The shared contact pipeline includes customer license/CRM details, page URL,
 notification with customer Reply-To, Todoist task, and confirmation for valid
 addresses. Other webhook URLs retain the existing WordPress proxy behavior.
 No API token or plugin Reoon key is needed for API mode.
+
+
+## Browser regression checks
+
+With Playwright available, run `node tests/browser.cjs`. Uses headless Microsoft Edge
+by default (`BROWSER_CHANNEL` overrides it); `PLAYWRIGHT_MODULE` can point to a
+shared installation. All outbound requests are blocked. Checks cover delayed CSS,
+the scroll gate, focus colors, validation, and safe API errors.

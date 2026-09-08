@@ -3,7 +3,7 @@
  * Plugin Name: Video Bubble
  * Plugin URI:  https://pythonandvba.com
  * Description: A lightweight video bubble widget with muted autoplay, contact form, and webhook integration.
- * Version:     1.3.4
+ * Version:     1.3.5
  * Author:      PythonAndVBA
  * Author URI:  https://pythonandvba.com
  * License:     GPL v2 or later
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'VB_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'VB_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'VB_VERSION', '1.3.4' );
+define( 'VB_VERSION', '1.3.5' );
 
 // ─── Auto-Update from GitHub ─────────────────────────────────────────────────
 
@@ -480,7 +480,7 @@ function vb_render_bubble() {
     if ( $always_show_x )  $container_classes[] = 'vb-x-always';
     if ( $hide_on_mobile ) $container_classes[] = 'vb-hide-mobile';
     ?>
-    <div id="vb-container" style="<?php echo esc_attr( $css_vars ); ?>" data-position="<?php echo esc_attr( $bubble_position ); ?>" data-video-type="<?php echo $is_bunny ? 'bunny' : 'direct'; ?>"<?php echo $container_classes ? ' class="' . esc_attr( implode( ' ', $container_classes ) ) . '"' : ''; ?>>
+    <div id="vb-container" style="display:none!important;<?php echo esc_attr( $css_vars ); ?>" data-position="<?php echo esc_attr( $bubble_position ); ?>" data-video-type="<?php echo $is_bunny ? 'bunny' : 'direct'; ?>"<?php echo $container_classes ? ' class="' . esc_attr( implode( ' ', $container_classes ) ) . '"' : ''; ?>>
 
         <!-- Bubble wrapper (positions the X relative to the circle) -->
         <div id="vb-bubble-wrap">
@@ -545,7 +545,7 @@ function vb_render_bubble() {
                             <textarea id="vb-field-message" name="message" rows="3" required placeholder="How can I help you?"></textarea>
                         </div>
                         <button type="submit" id="vb-submit-btn">Send</button>
-                        <div id="vb-form-feedback"></div>
+                        <div id="vb-form-feedback" role="status" aria-live="polite"></div>
                     </form>
                 </div>
 

@@ -2,6 +2,7 @@
 
 /* Container */
 #vb-container {
+    --vb-styles-ready: 1;
     --vb-size: 120px;
     --vb-margin-x: 24px;
     --vb-margin-y: 24px;
@@ -356,10 +357,11 @@
     box-sizing: border-box;
     outline: none;
 }
-.vb-field input:focus,
-.vb-field textarea:focus {
-    border-color: var(--vb-accent);
-    box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+#vb-container .vb-field input:focus,
+#vb-container .vb-field textarea:focus {
+    border-color: var(--vb-accent) !important;
+    box-shadow: 0 0 0 1px var(--vb-accent) !important;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--vb-accent) 18%, transparent) !important;
     background: #fff;
 }
 .vb-field input.vb-input-error,
