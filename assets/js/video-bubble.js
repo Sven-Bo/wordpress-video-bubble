@@ -4,6 +4,9 @@
     'use strict';
 
     var config = window.vbConfig || {};
+    // This public endpoint handles verification, notifications and confirmation.
+    var apiContact = /^https:\/\/api\.pythonandvba\.com\/contact\/web\/?$/.test(config.webhookUrl || '');
+    var formStartedAt = Date.now();
     var container = document.getElementById('vb-container');
     if (!container) return;
 
@@ -30,6 +33,14 @@
     var emailInput = document.getElementById('vb-field-email');
     var emailStatus = document.getElementById('vb-email-status');
     var feedback = document.getElementById('vb-form-feedback');
+    var honeypot = document.createElement('input');
+    honeypot.name = 'website';
+    honeypot.type = 'text';
+    honeypot.tabIndex = -1;
+    honeypot.autocomplete = 'off';
+    honeypot.setAttribute('aria-hidden', 'true');
+    honeypot.style.display = 'none';
+    form.appendChild(honeypot);
 
     // State
     var emailValid = false;
@@ -259,7 +270,7 @@
         }
 
         // If validation is disabled, accept immediately after regex passes
-        if (!config.emailValidation) {
+        if (apiContact || !config.emailValidation) {
             clearEmailStatus();
             clearFeedback();
             emailInput.classList.remove('vb-input-error');
@@ -345,8 +356,13 @@
             return;
         }
 
-        if (!emailValid) {
+        if (!apiContact && !emailValid) {
             setFeedback('Please wait for email verification or use a valid email.', 'error');
+            return;
+        }
+
+        if (apiContact && (name.length > 200 || email.length > 320 || message.length < 10 || message.length > 5000)) {
+            setFeedback('Please use a message of 10 to 5000 characters, a name up to 200 characters, and an email up to 320 characters.', 'error');
             return;
         }
 
@@ -363,19 +379,29 @@
         body.append('message', message);
         body.append('page_url', window.location.href);
 
-        fetch(config.ajaxUrl, {
-            method: 'POST',
-            body: body,
-            credentials: 'same-origin'
-        })
+        var options = {method: 'POST', body: body, credentials: 'same-origin'};
+        if (apiContact) {
+            options = {
+                method: 'POST',
+                credentials: 'omit',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    product: 'website', source: 'video-bubble',
+                    name: name, email: email, message: message,
+                    page: (window.location.origin + window.location.pathname).slice(0, 300),
+                    website: honeypot.value, elapsed_ms: Date.now() - formStartedAt
+                })
+            };
+        }
+        fetch(apiContact ? config.webhookUrl.replace(/\/$/, '') : config.ajaxUrl, options)
             .then(function (r) { return r.json(); })
             .then(function (res) {
-                if (res.success) {
+                if (apiContact ? res.status === 'success' : res.success) {
                     // Show success view
                     formView.style.display = 'none';
                     successView.style.display = 'block';
                 } else {
-                    var msg = (res.data && res.data.message) ? res.data.message : 'Something went wrong.';
+                    var msg = apiContact ? (res.message || 'Something went wrong.') : ((res.data && res.data.message) ? res.data.message : 'Something went wrong.');
                     setFeedback(msg, 'error');
                 }
             })

@@ -3,7 +3,7 @@
  * Plugin Name: Video Bubble
  * Plugin URI:  https://pythonandvba.com
  * Description: A lightweight video bubble widget with muted autoplay, contact form, and webhook integration.
- * Version:     1.3.3
+ * Version:     1.3.4
  * Author:      PythonAndVBA
  * Author URI:  https://pythonandvba.com
  * License:     GPL v2 or later
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'VB_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'VB_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'VB_VERSION', '1.3.3' );
+define( 'VB_VERSION', '1.3.4' );
 
 // ─── Auto-Update from GitHub ─────────────────────────────────────────────────
 
@@ -205,7 +205,7 @@ function vb_settings_page() {
                             <input type="password" id="vb_webhook_url" name="vb_webhook_url"
                                    value="<?php echo esc_attr( $webhook_url ); ?>" class="regular-text"
                                    placeholder="https://hooks.example.com/..." autocomplete="off" />
-                            <p class="description">Form submissions will be POSTed here as JSON.</p>
+                            <p class="description">Use https://api.pythonandvba.com/contact/web for API delivery with email verification and confirmation. Other webhook URLs use the WordPress proxy.</p>
                         </td>
                     </tr>
                 </table>

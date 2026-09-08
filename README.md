@@ -56,3 +56,19 @@ A small circular video plays on mute in the corner of your page. When clicked, i
 ## License
 
 GPL v2 or later
+
+
+## PythonAndVBA API delivery (1.3.4+)
+
+After deploying the API, install this plugin version and set **Webhook URL** to
+`https://api.pythonandvba.com/contact/web`. Save and purge the site's page cache.
+The browser submits directly to the public API, preserving visitor IP rate limits
+and origin checks. The plugin's Reoon setting is bypassed in this mode: the API
+verifies once at submission, rejects blocked addresses, and shows errors in the form.
+If verification is unavailable, the message reaches Sven but no confirmation is
+sent to the unverified address, matching the other contact forms.
+
+The shared contact pipeline includes customer license/CRM details, page URL,
+notification with customer Reply-To, Todoist task, and confirmation for valid
+addresses. Other webhook URLs retain the existing WordPress proxy behavior.
+No API token or plugin Reoon key is needed for API mode.
